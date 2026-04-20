@@ -1,73 +1,91 @@
 # Inégalités territoriales d'accès aux équipements sportifs en France
 
-**Auteurs** : DELETANG Arthur, GOUALOU Maxence, SERVANT Lucas  
-**Cours** : Python pour la Data Science — 2025-2026
-
-Les inégalités d'accès aux équipements sportifs entre départements français sont-elles le reflet des inégalités socio-économiques ? Ce projet mobilise des données open data pour répondre à cette question à travers une analyse descriptive, une visualisation cartographique et une modélisation statistique.
+Évaluation finale — *Python pour la data science*  
+Auteurs : DELETANG Arthur, GOUALOU Maxence, SERVANT Lucas  
+Chargé de TD : BEROVA Raya
 
 ---
 
-## Lancer le code
+## Objectif
 
-### Prérequis
+Analyser les **inégalités territoriales d'accès aux équipements sportifs** à l'échelle des départements français, et déterminer dans quelle mesure ces inégalités reflètent des inégalités socio-économiques (revenu médian, taux de pauvreté, densité de population, ruralité).
 
-```bash
-pip install -r requirements.txt
+---
+
+## Structure du dépôt
+
 ```
-
-### Exécution
-
-Ouvrir et exécuter toutes les cellules du notebook `main.ipynb` dans l'ordre.
-
-Les données sont téléchargées automatiquement via les APIs au moment de l'exécution — aucun fichier à télécharger manuellement.
+.
+├── main.ipynb          # Notebook principal (collecte, nettoyage, analyse, modélisation)
+├── requirements.txt    # Dépendances Python
+└── README.md           # Ce fichier
+```
 
 ---
 
 ## Données
 
-### Sources
+Toutes les données sont chargées automatiquement depuis le notebook via des APIs publiques — aucun téléchargement manuel n'est nécessaire.
 
-| Source | Description | Méthode | Fiabilité |
-|---|---|---|---|
-| [Ministère des Sports — Data ES](https://equipements.sports.gouv.fr) | Recensement national des équipements sportifs | API REST Opendatasoft (CSV direct) | Officielle, mise à jour quotidienne |
-| [INSEE via Data ES](https://equipements.sports.gouv.fr/explore/dataset/insee-2020-geoapi-2023) | Données socio-économiques communales (Filosofi 2020) | API REST Opendatasoft (CSV direct) | Officielle INSEE |
-| [france-geojson (GitHub)](https://github.com/gregoiredavid/france-geojson) | Contours géographiques des départements | Requête HTTP (GeoJSON) | Basé sur données IGN officielles |
+| Source | Description | Méthode |
+|---|---|---|
+| [Ministère des Sports — Data ES](https://equipements.sports.gouv.fr) | Recensement national des équipements sportifs (~330 000 équipements géolocalisés, mis à jour quotidiennement) | API REST Opendatasoft |
+| [INSEE via Data ES](https://equipements.sports.gouv.fr/explore/dataset/insee-2020-geoapi-2023) | Données socio-économiques communales issues du dispositif Filosofi 2020 (revenus, pauvreté, ruralité, superficie) | API REST Opendatasoft |
+| [france-geojson (GitHub)](https://github.com/gregoiredavid/france-geojson) | Contours géographiques des départements basés sur les données IGN | Requête HTTP (GeoJSON) |
 
 ### Variables principales
 
-| Variable | Source | Description |
-|---|---|---|
-| `equip_10k` | Calculée | Nombre d'équipements sportifs pour 10 000 habitants par département |
-| `revenu_median` | INSEE / Filosofi (`MED20`) | Revenu médian disponible par unité de consommation — moyenne pondérée par la population des médianes communales |
-| `taux_pauvrete` | INSEE / Filosofi (`TP6020`) | Part de la population sous le seuil de pauvreté à 60% — moyenne pondérée par la population |
-| `densite` | Calculée | Population / superficie (hab./km²) |
-| `part_rural` | INSEE (`TYPO_RURB_CRTE`) | Part des communes rurales dans le département, selon la grille de densité officielle INSEE (2020) |
+| Variable | Description |
+|---|---|
+| `equip_10k` | Nombre d'équipements sportifs pour 10 000 habitants — variable cible construite à partir du RES et de la population INSEE |
+| `revenu_median` | Revenu médian disponible par unité de consommation (€/an) — moyenne pondérée par la population des médianes communales Filosofi (`MED20`) |
+| `taux_pauvrete` | Part de la population sous le seuil de pauvreté à 60% du revenu médian — moyenne pondérée par la population (`TP6020`) |
+| `densite` | Densité de population (hab./km²) — calculée à partir de la population et de la superficie communales |
+| `part_rural` | Part des communes rurales dans le département selon la grille de densité officielle INSEE 2020 (`TYPO_RURB_CRTE`) |
+
+---
+
+## Installation et utilisation
+
+**1. Cloner le dépôt** — ouvrir un terminal et exécuter :
+
+```bash
+git clone https://github.com/Luservant/projet_python.git
+```
+
+**2. Installer les dépendances :**
+
+```bash
+pip install -r requirements.txt
+```
+
+**3. Lancer le notebook :**
+
+Ouvrir `main.ipynb` et exécuter toutes les cellules dans l'ordre (ou directement *Run All*).  
+Le notebook est entièrement reproductible : les données sont téléchargées automatiquement à chaque exécution.
+
+---
+
+## Contenu du notebook
+
+| Section | Description |
+|---|---|
+| **1. Imports** | Chargement des librairies |
+| **2. Collecte des données** | Récupération du RES via API REST, données INSEE communes, contours GeoJSON |
+| **3. Nettoyage et fusion** | Exploration des valeurs manquantes, standardisation des codes département, suppression des doublons, agrégation commune → département, construction du DataFrame analytique |
+| **4. Analyse descriptive** | Statistiques générales, distribution de la densité d'équipements, classement des départements, corrélations avec les variables socio-économiques, analyse par type d'équipement |
+| **5. Visualisation cartographique** | Carte choroplèthe interactive, carte bivarée équipements × pauvreté, carte des types d'équipements dominants par département |
+| **6. Modélisation** | Régression linéaire et Random Forest, analyse des résidus, validation croisée, optimisation des hyperparamètres, importance des variables |
 
 ---
 
 ## Principaux résultats
 
-En moyenne, on compte **65 équipements sportifs pour 10 000 habitants** en France. Ce chiffre masque des disparités importantes : les départements ruraux et peu peuplés (Hautes-Alpes, Lozère) affichent des ratios très élevés (>100), tandis que les départements urbains denses (Paris, Hauts-de-Seine) sont les moins bien dotés en relatif (<20).
+En moyenne, on compte **65 équipements sportifs pour 10 000 habitants** en France, avec de très fortes disparités : les Hautes-Alpes affichent un ratio de 265 contre 14 pour Paris.
 
-La matrice de corrélation révèle que la **densité de population** est la variable la plus corrélée négativement avec la densité d'équipements (r ≈ −0.8), devant la **part rurale** (corrélation positive) et le **taux de pauvreté** (corrélation négative modérée).
+La matrice de corrélation révèle que la **densité de population** est la variable la plus corrélée négativement avec la densité d'équipements (r ≈ −0.8), suivie de la **part rurale** (corrélation positive, r ≈ +0.7). Le taux de pauvreté et le revenu médian ont une influence plus modérée.
 
-![Matrice de corrélation](correlation.png)
-
----
-
-## Modélisation
-
-**Variable cible** : `equip_10k`  
-**Variables explicatives** : `revenu_median`, `taux_pauvrete`, `densite`, `part_rural`
-
-Deux modèles sont comparés :
-
-| Modèle | R² test |
-|---|---|
-| Régression linéaire (OLS) | 0.693 |
-| Random Forest | 0.875 |
-
-Le Random Forest capture mieux les relations non linéaires entre territoire et équipements sportifs. L'analyse des importances montre que la **densité de population** est de loin la variable la plus explicative, suivie du taux de pauvreté et du revenu médian.
+Le modèle **Random Forest** atteint un R² de **0.875** sur le jeu de test, contre 0.693 pour la régression linéaire, ce qui suggère des relations non linéaires importantes entre les variables territoriales et la densité d'équipements.
 
 ---
 
