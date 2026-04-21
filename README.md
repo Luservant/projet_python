@@ -63,7 +63,7 @@ pip install -r requirements.txt
 
 **3. Lancer le notebook :**
 
-Ouvrir `main.ipynb` et exécuter toutes les cellules dans l'ordre (ou directement *Run All*).  
+Ouvrir le dossier `projet_python` puis ouvrir `main.ipynb` et exécuter toutes les cellules dans l'ordre (ou directement *Run All*).  
 Le notebook est entièrement reproductible : les données sont téléchargées automatiquement à chaque exécution.
 
 ---
