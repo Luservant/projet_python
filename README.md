@@ -76,10 +76,11 @@ Le notebook est entièrement reproductible : les données sont téléchargées a
 | **2. Collecte des données** | Récupération du RES via API REST, données INSEE communes, contours GeoJSON |
 | **3. Nettoyage et fusion** | Exploration des valeurs manquantes, standardisation des codes département, suppression des doublons, agrégation commune → département, construction du DataFrame analytique |
 | **4. Analyse descriptive** | Statistiques générales, distribution de la densité d'équipements, classement des départements, corrélations avec les variables socio-économiques, analyse par type d'équipement |
-| **5. Visualisation cartographique** | Carte choroplèthe interactive, carte bivarée équipements × pauvreté, carte des types d'équipements dominants par département |
+| **5. Visualisation cartographique** | Carte choroplèthe interactive, carte bivarée équipements × pauvreté |
 | **6. Modélisation** | Régression linéaire et Random Forest, analyse des résidus, validation croisée, optimisation des hyperparamètres, importance des variables |
 
 ---
+
 ## Visualisation des cartes
 
 Les cartes interactives (Folium) peuvent parfois ne pas s'afficher directement dans l'aperçu statique de GitHub, ni sur le notebook. 
@@ -87,15 +88,16 @@ Les cartes interactives (Folium) peuvent parfois ne pas s'afficher directement d
 Si les cartes n'apparaissent pas dans le notebook :
 1. **Option locale** : Vous pouvez consulter ou télécharger les fichiers interactifs directement dans le dossier [`cartographies_html/`](./cartographies_html/).
    * *Note : Pour les visualiser, téléchargez le fichier et ouvrez-le avec n'importe quel navigateur (Chrome, Firefox, etc.).*
+
 ---
 
 ## Principaux résultats
 
-En moyenne, on compte **65 équipements sportifs pour 10 000 habitants** en France, avec de très fortes disparités : les Hautes-Alpes affichent un ratio de 265 contre 14 pour Paris.
+En moyenne, on compte **65 équipements sportifs pour 10 000 habitants** en France métropolitaine, avec de très fortes disparités : les Hautes-Alpes affichent un ratio de 265 contre 14 pour Paris. Les départements ruraux et peu peuplés sont systématiquement mieux dotés en relatif que les grandes métropoles, qui subissent un effet de dilution — leur population croît plus vite que leurs infrastructures sportives.
 
-La matrice de corrélation révèle que la **densité de population** est la variable la plus corrélée négativement avec la densité d'équipements (r ≈ −0.8), suivie de la **part rurale** (corrélation positive, r ≈ +0.7). Le taux de pauvreté et le revenu médian ont une influence plus modérée.
+La matrice de corrélation révèle que la **part rurale** (r = +0.52) et le **taux de pauvreté** (r = −0.53) sont les variables les plus liées à la densité d'équipements. Les départements les plus pauvres tendent à être moins bien dotés, tandis que les territoires à dominante rurale sont mieux équipés en relatif. Le revenu médian (r = −0.39) et la densité de population (r = −0.29) ont une influence plus modérée.
 
-Le modèle **Random Forest** atteint un R² de **0.875** sur le jeu de test, contre 0.693 pour la régression linéaire, ce qui suggère des relations non linéaires importantes entre les variables territoriales et la densité d'équipements.
+Le modèle **Random Forest** atteint un R² de **0.864** sur le jeu de test, contre 0.698 pour la régression linéaire. La variable la plus importante dans le Random Forest est la **densité de population**, suivie du taux de pauvreté et du revenu médian. La validation croisée révèle cependant une instabilité des performances liée à la petite taille de l'échantillon (96 départements).
 
 ---
 
