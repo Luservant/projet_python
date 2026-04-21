@@ -75,7 +75,7 @@ Le notebook est entièrement reproductible : les données sont téléchargées a
 | **1. Imports** | Chargement des librairies |
 | **2. Collecte des données** | Récupération du RES via API REST, données INSEE communes, contours GeoJSON |
 | **3. Nettoyage et fusion** | Exploration des valeurs manquantes, standardisation des codes département, suppression des doublons, agrégation commune → département, construction du DataFrame analytique |
-| **4. Analyse descriptive** | Statistiques générales, distribution de la densité d'équipements, classement des départements, corrélations avec les variables socio-économiques, analyse par type d'équipement |
+| **4. Analyse descriptive** | Statistiques générales, distribution de la densité d'équipements, classement des départements, corrélations avec les variables socio-économiques |
 | **5. Visualisation cartographique** | Carte choroplèthe interactive, carte bivarée équipements × pauvreté |
 | **6. Modélisation** | Régression linéaire et Random Forest, analyse des résidus, validation croisée, optimisation des hyperparamètres, importance des variables |
 
